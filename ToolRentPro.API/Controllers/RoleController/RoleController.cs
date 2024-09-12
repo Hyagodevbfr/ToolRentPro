@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 using ToolRentPro.API.Dto.Role;
 using ToolRentPro.API.Model;
 
@@ -56,5 +57,19 @@ public class RoleController: ControllerBase
             roleDtos.Add(roleDto);
         }
         return Ok(roleDtos);
+
+    }
+    [HttpDelete("/delete/{id}")]
+    public async Task<IActionResult> DeleteRole(string id)
+    {
+        var role = await _roleManager.FindByIdAsync(id);
+        if(role is null)
+            return NotFound("Função não encontrada ou já deletada.");
+
+        var result = await _roleManager.DeleteAsync(role);
+        if(result.Succeeded)
+            return Ok(new { message = "Função deletada com sucesso." });
+
+        return BadRequest("Falha ao tentar excluir função.");
     }
 }

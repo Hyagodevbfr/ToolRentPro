@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
@@ -125,6 +126,29 @@ public class AccountController: ControllerBase
             AcessFailedCount = user.AccessFailedCount
         });
     }
+
+    [Authorize]
+    [HttpGet("/users")]
+    public async Task<ActionResult<IEnumerable<UserDetailDto>>> GetUsers()
+    {
+        var users = await _userManager.Users.ToListAsync( );
+        var userDetails = new List<UserDetailDto>();
+
+        foreach( var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            userDetails.Add(new UserDetailDto {
+                Id= user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Roles = [..roles]
+            });
+        }
+        return Ok(userDetails);
+    }
+
+
     private async Task<string> GenerateToken(UserModel user)
     {
         var tokenHandler = new JwtSecurityTokenHandler( );

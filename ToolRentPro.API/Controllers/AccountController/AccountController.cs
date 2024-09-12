@@ -65,6 +65,40 @@ public class AccountController: ControllerBase
         });
     }
 
+    [AllowAnonymous]
+    [HttpPost("/login")]
+    public async Task<ActionResult<AuthResponseDto>> Login(UserLoginDto loginDto)
+    {
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        if(user is null)
+            return NotFound(new AuthResponseDto
+            {
+                IsSuccess = false,
+                Message = "Usuário não localizado."
+            });
+
+        var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+        if(!result)
+            return Unauthorized(new AuthResponseDto
+            {
+                IsSuccess = false,
+                Message = "Senha inválida."
+            });
+
+        var token = await GenerateToken(user);
+
+        return Ok(new AuthResponseDto
+        {
+            Token = token,
+            IsSuccess = true,
+            Message = "Login Efetuado com sucesso"
+        });
+    }
+
+
     private async Task<string> GenerateToken(UserModel user)
     {
         var tokenHandler = new JwtSecurityTokenHandler( );

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ToolRentPro.API.Dto.Role;
 using ToolRentPro.API.Model;
 
@@ -35,5 +36,25 @@ public class RoleController: ControllerBase
             return Ok(new {message = "Função criada com sucesso."});
 
         return BadRequest("Falha ao criar nova função.");
+    }
+
+    [HttpGet("/roles")]
+    public async Task<ActionResult<IEnumerable<RoleResponseDto>>> GetRoles()
+    {
+        var roles = await _roleManager.Roles.ToListAsync();
+        var roleDtos = new List<RoleResponseDto>();
+
+        foreach(var role in roles)
+        {
+            var userInRole = await _userManager.GetUsersInRoleAsync(role.Name!);
+            var roleDto = new RoleResponseDto
+            {
+                Id = role.Id,
+                Name = role.Name,
+                TotalUsers = userInRole.Count
+            };
+            roleDtos.Add(roleDto);
+        }
+        return Ok(roleDtos);
     }
 }

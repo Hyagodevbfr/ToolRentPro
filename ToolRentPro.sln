@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35208.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolRentPro.API", "ToolRentPro.API\ToolRentPro.API.csproj", "{7CAB1084-8D2F-4BEC-B74A-64B9C87241FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CAB1084-8D2F-4BEC-B74A-64B9C87241FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CAB1084-8D2F-4BEC-B74A-64B9C87241FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CAB1084-8D2F-4BEC-B74A-64B9C87241FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CAB1084-8D2F-4BEC-B74A-64B9C87241FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E4EB216-A09B-4E91-A2FC-CECB04D4119F}
+	EndGlobalSection
+EndGlobal

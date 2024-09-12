@@ -72,4 +72,32 @@ public class RoleController: ControllerBase
 
         return BadRequest("Falha ao tentar excluir função.");
     }
+
+    [HttpPut("/assign")]
+    public async Task<IActionResult> AssignRoleToUser([FromBody] AssignRoleDto assignRoleDto)
+    {
+        var user = await _userManager.FindByIdAsync(assignRoleDto.UserId);
+        if(user is null)
+            return NotFound("Usuário não registrado.");
+
+        var role = await _roleManager.FindByIdAsync(assignRoleDto.RoleId);
+        if(role is null)
+            return NotFound("Role não encontrada ou deletada.");
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if(userRoles.Any() && !userRoles.Contains(role.Name!))
+        {
+            var removeRoles = await _userManager.RemoveFromRolesAsync(user, userRoles);
+            if(!removeRoles.Succeeded)
+                return BadRequest("Falha ao remover role existente.");
+        }
+
+        var result = await _userManager.AddToRoleAsync(user,role.Name!);
+        if(result.Succeeded)
+            return Ok(new { message = "Função atribuída com sucesso." });
+
+        var error = result.Errors.FirstOrDefault();
+        return BadRequest(error!.Description);
+
+    }
 }

@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ToolRentPro.API.Dto.Auth;
+using ToolRentPro.API.Dto.User;
 using ToolRentPro.API.Model;
 
 namespace ToolRentPro.API.Controllers.AccountController;
@@ -17,12 +21,48 @@ public class AccountController: ControllerBase
     private readonly UserManager<UserModel> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
+    private readonly IMapper _mapper;
 
-    public AccountController(UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public AccountController(UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IMapper mapper)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _mapper = mapper;
+    }
+
+    [AllowAnonymous]
+    [HttpPost("/register")]
+    public async Task<ActionResult<string>> Register(UserRegisterDto userRegisterDto)
+    {
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var user = new UserModel {
+            UserName = userRegisterDto.Email,
+            Email = userRegisterDto.Email,
+            FirstName = userRegisterDto.FirstName,
+            LastName = userRegisterDto.LastName,
+        };
+
+        var result = await _userManager.CreateAsync(user,userRegisterDto.Password);
+
+        if(!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        if(userRegisterDto.Roles is null)
+            await _userManager.AddToRoleAsync(user,"User");
+        else
+            foreach (var role in userRegisterDto.Roles)
+            {
+                await _userManager.AddToRoleAsync(user,role);
+            }
+
+        return Ok(new AuthResponseDto
+        {
+            IsSuccess = true,
+            Message = "Conta criada com sucesso!"
+        });
     }
 
     private async Task<string> GenerateToken(UserModel user)

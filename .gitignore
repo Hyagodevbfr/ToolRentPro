@@ -399,4 +399,5 @@ FodyWeavers.xsd
 
 ToolRentPro.API/obj/
 ToolRentPro.API/appsettings.Development.json
+ToolRentPro.API/appsettings.json
 

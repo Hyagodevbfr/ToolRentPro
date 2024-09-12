@@ -98,7 +98,33 @@ public class AccountController: ControllerBase
         });
     }
 
+    [Authorize]
+    [HttpGet("/detail")]
+    public async Task<ActionResult<UserDetailDto>> UserDetail()
+    {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userManager.FindByIdAsync(currentUserId!);
 
+        if(user is null)
+            return NotFound(new AuthResponseDto
+            {
+                IsSuccess = false,
+                Message = "Usuário não localizado."
+            });
+
+        return Ok(new UserDetailDto
+        {
+            Id = currentUserId,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            Roles = [.. await _userManager.GetRolesAsync(user)],
+            PhoneNumber = user.PhoneNumber,
+            TwoFactorEnabled = user.TwoFactorEnabled,
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+            AcessFailedCount = user.AccessFailedCount
+        });
+    }
     private async Task<string> GenerateToken(UserModel user)
     {
         var tokenHandler = new JwtSecurityTokenHandler( );

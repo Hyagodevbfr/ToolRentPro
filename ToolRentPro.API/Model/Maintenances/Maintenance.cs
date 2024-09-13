@@ -8,8 +8,8 @@ public class Maintenance
 {
     [Key]
     public Guid Id { get; set; }
-    public ToolModel? Tool { get; set; }
     public Guid? ToolId { get; set; }
+    public ToolModel? Tool { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public string? ProblemDescription { get; set; }

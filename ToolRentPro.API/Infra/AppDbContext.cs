@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ToolRentPro.API.Model;
+using ToolRentPro.API.Model.User;
 
 namespace ToolRentPro.API.Infra;
 

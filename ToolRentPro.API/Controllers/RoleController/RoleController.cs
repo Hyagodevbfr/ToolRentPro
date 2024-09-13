@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
 using ToolRentPro.API.Dto.Role;
-using ToolRentPro.API.Model;
+using ToolRentPro.API.Model.User;
 
 namespace ToolRentPro.API.Controllers.RoleController;
 [Authorize]

@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using ToolRentPro.API.Dto.Auth;
 using ToolRentPro.API.Dto.User;
-using ToolRentPro.API.Model;
+using ToolRentPro.API.Model.User;
 
 namespace ToolRentPro.API.Controllers.AccountController;
 [Authorize]

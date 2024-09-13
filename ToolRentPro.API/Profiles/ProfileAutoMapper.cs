@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ToolRentPro.API.Dto.User;
-using ToolRentPro.API.Model;
+using ToolRentPro.API.Model.User;
 
 namespace ToolRentPro.API.Profiles;
 

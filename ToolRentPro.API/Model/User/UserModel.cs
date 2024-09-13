@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ToolRentPro.API.Model;
+namespace ToolRentPro.API.Model.User;
 
 public class UserModel : IdentityUser
 {

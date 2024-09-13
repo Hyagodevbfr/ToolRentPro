@@ -1,15 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ToolRentPro.API.Enums.Tool;
+using ToolRentPro.API.Model.Categories;
+using ToolRentPro.API.Model.Maintenances;
 using ToolRentPro.API.Model.User;
 
 namespace ToolRentPro.API.Model.Tool;
 
-public class ToolModel
+public class ToolModel : Entity
 {
-    [Key] public Guid Id { get; set; } = Guid.NewGuid( );
-    [Required]
     public int CategoryId { get; set; }
+    public Category? Category { get; private set; }
     [Required]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = null!;
     [Required]
     public string Description { get; set; } = string.Empty ;
     [Required]
@@ -21,11 +23,8 @@ public class ToolModel
     [Required]
     public decimal ToolCost { get; set; }
     [Required]
-    public string Availability { get; set; } = string.Empty;
+    public AvailabilityEnum Availability { get; set; }
     public bool NecessaryMaintenance { get; set; }
-    public List<string>? MaintenanceHistory { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public Guid CreatedByUserId { get; set; }
-    public DateTime LastUpdate { get; set; } = DateTime.UtcNow;
-    public Guid LastUpdatedByUserId { get; set; }
+    public List<Maintenance>? MaintenanceHistoryId { get; set; }
+    public List<Maintenance>? MaintenanceHistory { get; set; }
 }

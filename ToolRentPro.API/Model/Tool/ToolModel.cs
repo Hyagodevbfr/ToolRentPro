@@ -8,8 +8,8 @@ namespace ToolRentPro.API.Model.Tool;
 
 public class ToolModel : Entity
 {
-    public int CategoryId { get; set; }
-    public Category? Category { get; private set; }
+    public Guid CategoryId { get; set; }
+    public Category? Category { get; set; }
     [Required]
     public string Name { get; set; } = null!;
     [Required]
@@ -24,7 +24,7 @@ public class ToolModel : Entity
     public decimal ToolCost { get; set; }
     [Required]
     public AvailabilityEnum Availability { get; set; }
+    public ICollection<string>? RentalTool { get; set; } = new List<string>( );
     public bool NecessaryMaintenance { get; set; }
-    public List<Maintenance>? MaintenanceHistoryId { get; set; }
-    public List<Maintenance>? MaintenanceHistory { get; set; }
+    public ICollection<Maintenance>? MaintenanceHistory { get; set; } = new List<Maintenance>( );
 }

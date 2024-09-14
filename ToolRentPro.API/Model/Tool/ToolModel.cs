@@ -11,7 +11,7 @@ public class ToolModel : Entity
     public Guid CategoryId { get; set; }
     public Category? Category { get; set; }
     [Required]
-    public string Name { get; set; } = null!;
+    public string NameTool { get; set; } = null!;
     [Required]
     public string Description { get; set; } = string.Empty ;
     [Required]

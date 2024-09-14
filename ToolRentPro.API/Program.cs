@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Runtime;
 using System.Text;
 using ToolRentPro.API.Infra;
 using ToolRentPro.API.Model.User;
@@ -42,6 +44,7 @@ builder.Services.AddControllers( );
 builder.Services.AddEndpointsApiExplorer( );
 builder.Services.AddSwaggerGen(c =>
 {
+    
     c.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme
     {
         Description = @"Jwt authorization example: 'Bearer eyJdhslfofpdfmvhfd.'",
@@ -71,6 +74,17 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies( ));
 
 var app = builder.Build( );
+
+var imagePath = Path.Combine(Directory.GetCurrentDirectory( ),"Images");
+if(!Directory.Exists(imagePath))
+    Directory.CreateDirectory(imagePath);
+
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(imagePath),
+    RequestPath = "/Images"
+});
 
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment( ))

@@ -12,6 +12,8 @@ using ToolRentPro.API.Infra;
 using ToolRentPro.API.Model.Categories;
 using ToolRentPro.API.Model.Tool;
 using ToolRentPro.API.Model.User;
+using System.IO;
+
 
 namespace ToolRentPro.API.Controllers.ToolController;
 [Authorize]
@@ -88,6 +90,57 @@ public class ToolController: ControllerBase
             return NotFound("Ferramenta não encontrada ou apagada.");
 
         return Ok(tool);
+    }
+
+    [HttpPatch("{id:guid}")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult> UpdateTool(IFormFile photo, Guid id,[FromForm] ToolUpdateDto toolUpdateDto)
+    {
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = Guid.Parse(currentUserId!);
+
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if(photo is null)
+            return BadRequest("Insira uma foto.");
+
+        var tool =  await _appDbContext.Tools!.FirstOrDefaultAsync(t => t.Id == id);
+        if(tool is null)
+            return NotFound("Ferramenta não encontrada ou apagada.");
+
+        var pathName = "";
+        if(photo is not null)
+        {
+            string existingPath = _imagePath + tool.Photo;
+            if(System.IO.File.Exists(existingPath))
+                System.IO.File.Delete(existingPath);
+
+            pathName = await GenerateNameImage(photo!);
+        }
+
+        tool.NameTool = toolUpdateDto.NameTool;
+        tool.Description = toolUpdateDto.Description;
+        tool.CategoryId = toolUpdateDto.CategoryId;
+        tool.Brand = toolUpdateDto.Brand;
+        tool.StockQuantity = toolUpdateDto.StockQuantity;
+        tool.ToolCost = toolUpdateDto.ToolCost;
+        tool.Availability = toolUpdateDto.Availability;
+        tool.NecessaryMaintenance = toolUpdateDto.NecessaryMaintenance;
+
+            
+        if(photo != null)
+            tool.Photo = pathName;
+        else 
+            tool.Photo = tool.Photo;
+
+        tool.EditedBy = user;
+        tool.LastUpdate = DateTime.UtcNow;
+
+        _appDbContext.Update(tool);
+        await _appDbContext.SaveChangesAsync();
+        return Ok(tool);
+
     }
 
     private async Task<string> GenerateNameImage(IFormFile photo)

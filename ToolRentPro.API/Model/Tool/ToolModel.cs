@@ -2,6 +2,7 @@
 using ToolRentPro.API.Enums.Tool;
 using ToolRentPro.API.Model.Categories;
 using ToolRentPro.API.Model.Maintenances;
+using ToolRentPro.API.Model.RentalTools;
 using ToolRentPro.API.Model.User;
 
 namespace ToolRentPro.API.Model.Tool;
@@ -24,7 +25,7 @@ public class ToolModel : Entity
     public decimal ToolCost { get; set; }
     [Required]
     public AvailabilityEnum Availability { get; set; }
-    public ICollection<string>? RentalTool { get; set; } = new List<string>( );
+    public ICollection<RentalTool>? RentalTool { get; set; } = new List<RentalTool>( );
     public bool NecessaryMaintenance { get; set; }
     public ICollection<Maintenance>? MaintenanceHistory { get; set; } = new List<Maintenance>( );
 }
